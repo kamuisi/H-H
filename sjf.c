@@ -30,9 +30,9 @@ void printProcess(int n, PCB P[])
         printf("\n%-20d %-20d %-20d %-20d %-20d %-20d", P[i].iPID, P[i].iStart, P[i].iFinish, P[i].iWaiting, P[i].iResponse, P[i].iTaT);
     }
 }
-void exportGanttChart(int n, PCB P[])
+void exportGanttChart(int n, PCB P[], int Root)
 {
-    int count = 0;
+    int count = Root;
     printf("|");
     for (int i = 0; i < n; i++)
     {
@@ -43,7 +43,7 @@ void exportGanttChart(int n, PCB P[])
             printf(" ");
         printf("|");
     }
-    printf("\n0");
+    printf("\n%d", Root);
     for (int i = 0; i < n; i++)
     {
         count += P[i].iBurst;
@@ -197,19 +197,20 @@ int main()
     int iRemain = iNumberOfProcess, iReady = 0, iTerminated = 0;
     inputProcess(iNumberOfProcess, Input);
     quickSort(Input, 0, iNumberOfProcess - 1, SORT_BY_ARRIVAL);
+    int Root = Input[0].iArrival;
     pushProcess(&iReady, ReadyQueue, Input[0]);
     removeProcess(&iRemain, 0, Input);
-    ReadyQueue[0].iStart = 0;
+    ReadyQueue[0].iStart = ReadyQueue[0].iArrival;
     ReadyQueue[0].iResponse = 0;
     ReadyQueue[0].iWaiting = 0;
-    ReadyQueue[0].iFinish = ReadyQueue[0].iBurst;
+    ReadyQueue[0].iFinish = ReadyQueue[0].iBurst + ReadyQueue[0].iArrival;
     ReadyQueue[0].iTaT = ReadyQueue[0].iFinish - ReadyQueue[0].iArrival;
     printf("\nReady queue");
     printProcess(1, ReadyQueue);
     pushProcess(&iTerminated, TerminatedArray, ReadyQueue[0]);
     removeProcess(&iReady, 0, ReadyQueue);
 
-    int Time_Passed = TerminatedArray[0].iBurst;
+    int Time_Passed = TerminatedArray[0].iBurst + TerminatedArray[0].iArrival;
     while (iTerminated < iNumberOfProcess)
     {
         if (iRemain > 0)
@@ -234,7 +235,7 @@ int main()
         }
     }
     printf("\n===== SJF Scheduling =====\n");
-    exportGanttChart(iTerminated, TerminatedArray);
+    exportGanttChart(iTerminated, TerminatedArray, Root);
     quickSort(TerminatedArray, 0, iTerminated - 1, SORT_BY_PID);
     calculateAWT(iTerminated, TerminatedArray);
     calculateATaT(iTerminated, TerminatedArray);

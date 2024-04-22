@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 int main()
 {
     char *str;
     int Arrival;
     int Burst_TIme;
+    srand(time(NULL));
     scanf("%s", str);
     for (int j = 0; j < 3; j++)
     {
