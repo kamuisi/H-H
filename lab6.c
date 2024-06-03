@@ -190,10 +190,10 @@ int main(void)
             child_exit = 1;
             wait(NULL);
             dup2(default_in, 0);
-            close(default_in);
             dup2(default_out, 1);
-            close(default_out);
         }
     }
+    close(default_in);
+    close(default_out);
     return 0;
 }
