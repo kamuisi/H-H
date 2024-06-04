@@ -139,6 +139,7 @@ int main(void)
                     j++;
                     i++;
                 }
+                pipe_args[j] = '\0';
                 break;
             }
             i++;
